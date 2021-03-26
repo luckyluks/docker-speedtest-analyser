@@ -22,18 +22,28 @@ def runSpeedtest():
         servers = []
         threads = None
 
-        s = Speedtest()
-        s.get_servers(servers)
-        s.get_best_server()
-        s.download(threads=threads)
-        s.upload(threads=threads, pre_allocate=False)
-        result = s.results.dict()
+        try:
+                s = Speedtest()
+                s.get_servers(servers)
+                s.get_best_server()
+                s.download(threads=threads)
+                s.upload(threads=threads, pre_allocate=False)
+                result = s.results.dict()
 
-        #collect speedtest data
-        ping = round(result['ping'], 2)
-        download = round(result['download'] / 1000 / 1000, 2)
-        upload = round(result['upload'] / 1000 / 1000, 2)
-        timestamp = round(time.time() * 1000, 3)
+                #collect speedtest data
+                ping = round(result['ping'], 2)
+                download = round(result['download'] / 1000 / 1000, 2)
+                upload = round(result['upload'] / 1000 / 1000, 2)
+                timestamp = round(time.time() * 1000, 3)
+        except Exception as e:
+                print("Failed speedtest: ", e)
+
+                #set default data
+                ping = 0
+                download = 0
+                upload = 0
+                timestamp = round(time.time() * 1000, 3)
+                
 
         csv_data_dict = {
                 CSV_FIELDNAMES[0]: timestamp,
